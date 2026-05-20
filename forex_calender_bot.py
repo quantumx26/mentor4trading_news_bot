@@ -14,8 +14,10 @@ import sys
 # ─────────────────────────────────────────────
 # KONFIGURATION – hier anpassen!
 # ─────────────────────────────────────────────
-BOT_TOKEN   = "DEIN_BOT_TOKEN_HIER"        # von @BotFather
-CHANNEL_ID  = "@deinKanalName"             # z.B. "@mentor4trading_signals"
+from dotenv import load_dotenv
+load_dotenv()
+BOT_TOKEN   = os.environ.get("BOT_TOKEN", "")
+CHANNEL_ID  = os.environ.get("CHANNEL_ID", "")
 
 # Welche Währungen sollen gezeigt werden?
 CURRENCIES  = ["USD", "EUR", "GBP", "JPY"]
