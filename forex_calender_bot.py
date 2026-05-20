@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
 Mentor4Trading – ForexFactory Kalender Bot
-Postet täglich High-Impact Events in deinen Telegram Kanal
++ Täglicher Homepage Hinweis (20:00)
++ Wöchentlicher Indikator Post (Montag 08:00)
++ Wöchentlicher Twitch/TikTok Hinweis (Sonntag 18:00)
 """
 
 import requests
@@ -10,24 +12,18 @@ from datetime import datetime, timezone, timedelta
 import pytz
 import os
 import sys
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # ─────────────────────────────────────────────
-# KONFIGURATION – hier anpassen!
-# ─────────────────────────────────────────────
-from dotenv import load_dotenv
-load_dotenv()
 BOT_TOKEN   = os.environ.get("BOT_TOKEN", "")
 CHANNEL_ID  = os.environ.get("CHANNEL_ID", "")
-
-# Welche Währungen sollen gezeigt werden?
 CURRENCIES  = ["USD", "EUR", "GBP", "JPY"]
-
-# Nur diese Impact-Level posten (High = rot auf FF)
 SHOW_HIGH   = True
-SHOW_MEDIUM = False   # auf True setzen wenn du auch gelbe Events willst
+SHOW_MEDIUM = False
 SHOW_LOW    = False
-
-TIMEZONE    = "Europe/Berlin"  # MEZ / MESZ automatisch
+TIMEZONE    = "Europe/Berlin"
 # ─────────────────────────────────────────────
 
 FF_URL = "https://nfs.faireconomy.media/ff_calendar_thisweek.xml"
@@ -36,27 +32,36 @@ IMPACT_EMOJI = {
     "High":   "🔴",
     "Medium": "🟡",
     "Low":    "⚪",
-    "Non-Economic": "ℹ️"
 }
 
 FLAG_EMOJI = {
-    "USD": "🇺🇸",
-    "EUR": "🇪🇺",
-    "GBP": "🇬🇧",
-    "JPY": "🇯🇵",
-    "CHF": "🇨🇭",
-    "AUD": "🇦🇺",
-    "CAD": "🇨🇦",
-    "NZD": "🇳🇿",
+    "USD": "🇺🇸", "EUR": "🇪🇺", "GBP": "🇬🇧",
+    "JPY": "🇯🇵", "CHF": "🇨🇭", "AUD": "🇦🇺",
+    "CAD": "🇨🇦", "NZD": "🇳🇿",
 }
 
 
-def fetch_calendar():
-    """ForexFactory XML Calendar holen"""
+def send_to_telegram(message):
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    payload = {
+        "chat_id":    CHANNEL_ID,
+        "text":       message,
+        "parse_mode": "Markdown",
+        "disable_web_page_preview": True
+    }
     try:
-        r = requests.get(FF_URL, timeout=15, headers={
-            "User-Agent": "Mozilla/5.0"
-        })
+        r = requests.post(url, json=payload, timeout=10)
+        r.raise_for_status()
+        print(f"[OK] Gesendet!")
+        return True
+    except Exception as e:
+        print(f"[ERROR] Telegram Fehler: {e}")
+        return False
+
+
+def fetch_calendar():
+    try:
+        r = requests.get(FF_URL, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
         r.raise_for_status()
         return r.content
     except Exception as e:
@@ -65,12 +70,11 @@ def fetch_calendar():
 
 
 def parse_events(xml_data):
-    """Events aus XML parsen und für heute filtern"""
     root = ET.fromstring(xml_data)
     tz_berlin = pytz.timezone(TIMEZONE)
     today = datetime.now(tz_berlin).date()
-
     events = []
+
     for event in root.findall("event"):
         try:
             currency = event.findtext("country", "").strip().upper()
@@ -79,33 +83,25 @@ def parse_events(xml_data):
             date_str = event.findtext("date", "").strip()
             time_str = event.findtext("time", "").strip()
 
-            # Währungs-Filter
-            if currency not in CURRENCIES:
-                continue
-
-            # Impact-Filter
+            if currency not in CURRENCIES: continue
             if impact == "High"   and not SHOW_HIGH:   continue
             if impact == "Medium" and not SHOW_MEDIUM:  continue
             if impact == "Low"    and not SHOW_LOW:     continue
             if impact == "Non-Economic":                continue
 
-            # Datum parsen (FF liefert z.B. "05-20-2026")
             try:
                 event_date = datetime.strptime(date_str, "%m-%d-%Y").date()
             except:
                 continue
 
-            # Nur heutige Events
-            if event_date != today:
-                continue
+            if event_date != today: continue
 
-            # Zeit umrechnen (FF liefert UTC)
             if time_str and time_str.lower() not in ("", "all day", "tentative"):
                 try:
                     dt_utc = datetime.strptime(
                         f"{date_str} {time_str}", "%m-%d-%Y %I:%M%p"
                     ).replace(tzinfo=timezone.utc)
-                    dt_local = dt_utc.astimezone(tz_berlin)
+                    dt_local = dt_utc.astimezone(pytz.timezone(TIMEZONE))
                     time_display = dt_local.strftime("%H:%M")
                     sort_key = dt_local
                 except:
@@ -116,50 +112,40 @@ def parse_events(xml_data):
                 sort_key = datetime.max.replace(tzinfo=timezone.utc)
 
             events.append({
-                "time":     time_display,
-                "currency": currency,
-                "impact":   impact,
-                "title":    title,
-                "sort_key": sort_key
+                "time": time_display, "currency": currency,
+                "impact": impact, "title": title, "sort_key": sort_key
             })
-
-        except Exception as e:
-            print(f"[WARN] Event überspringen: {e}")
+        except:
             continue
 
-    # Nach Uhrzeit sortieren
     events.sort(key=lambda x: x["sort_key"])
     return events
 
 
-def build_message(events):
-    """Telegram-Nachricht formatieren"""
+def build_calendar_message(events):
     tz_berlin = pytz.timezone(TIMEZONE)
     now = datetime.now(tz_berlin)
-
-    # Wochentag auf Deutsch
     weekdays = {
         "Monday": "Montag", "Tuesday": "Dienstag", "Wednesday": "Mittwoch",
         "Thursday": "Donnerstag", "Friday": "Freitag",
         "Saturday": "Samstag", "Sunday": "Sonntag"
     }
-    day_de = weekdays.get(now.strftime("%A"), now.strftime("%A"))
+    day_de  = weekdays.get(now.strftime("%A"), now.strftime("%A"))
     date_str = now.strftime(f"{day_de}, %d.%m.%Y")
 
-    msg = f"📅 *Wirtschaftskalender – {date_str}*\n"
+    msg  = f"📅 *Wirtschaftskalender – {date_str}*\n"
     msg += "━━━━━━━━━━━━━━━━━━━━━\n\n"
 
     if not events:
         msg += "✅ Keine High-Impact Events heute – ruhiger Tag!\n"
     else:
         for e in events:
-            emoji   = IMPACT_EMOJI.get(e["impact"], "⚫")
-            flag    = FLAG_EMOJI.get(e["currency"], "🌐")
-            msg += f"{emoji} `{e['time']}` {flag} *{e['currency']}* – {e['title']}\n"
+            emoji = IMPACT_EMOJI.get(e["impact"], "⚫")
+            flag  = FLAG_EMOJI.get(e["currency"], "🌐")
+            msg  += f"{emoji} `{e['time']}` {flag} *{e['currency']}* – {e['title']}\n"
 
     msg += "\n━━━━━━━━━━━━━━━━━━━━━\n"
 
-    # Warnhinweis wenn Events da sind
     high_count = sum(1 for e in events if e["impact"] == "High")
     if high_count >= 3:
         msg += "⚠️ *Viele News heute – SL absichern, klein traden!*\n"
@@ -172,51 +158,87 @@ def build_message(events):
     return msg
 
 
-def send_to_telegram(message):
-    """Nachricht an Telegram senden"""
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    payload = {
-        "chat_id":    CHANNEL_ID,
-        "text":       message,
-        "parse_mode": "Markdown",
-        "disable_web_page_preview": True
-    }
-    try:
-        r = requests.post(url, json=payload, timeout=10)
-        r.raise_for_status()
-        print(f"[OK] Nachricht gesendet! Message-ID: {r.json()['result']['message_id']}")
-        return True
-    except Exception as e:
-        print(f"[ERROR] Telegram Fehler: {e}")
-        if hasattr(e, 'response') and e.response:
-            print(f"       Response: {e.response.text}")
-        return False
+def build_homepage_message():
+    msg  = "🌐 *Mehr von Mentor4Trading*\n"
+    msg += "━━━━━━━━━━━━━━━━━━━━━\n"
+    msg += "📊 Gratis Ressourcen & Guides\n"
+    msg += "📈 ORB Ebook · SMC Basics · Setups\n"
+    msg += "🔗 [mentor4trading.netlify.app](https://mentor4trading.netlify.app)\n"
+    msg += "━━━━━━━━━━━━━━━━━━━━━\n"
+    msg += "@mentor4trading\\_signals"
+    return msg
+
+
+def build_indicator_message():
+    msg  = "🎯 *SMC Entry Finder V5*\n"
+    msg += "━━━━━━━━━━━━━━━━━━━━━\n"
+    msg += "Der Indikator den ich für alle\n"
+    msg += "meine Signale nutze – jetzt\n"
+    msg += "noch kostenlos verfügbar\\!\n\n"
+    msg += "✅ Live Dashboard · Session & Bias\n"
+    msg += "✅ Entry Zone Visualisierung\n"
+    msg += "✅ Signal Filter mit Alerts\n\n"
+    msg += "⚠️ *Ab Juni nur noch paid*\n"
+    msg += "🔗 [Jetzt sichern](https://mentor4trading.netlify.app/indikator.html)\n"
+    msg += "━━━━━━━━━━━━━━━━━━━━━\n"
+    msg += "Link in Bio · @mentor4trading\\_signals"
+    return msg
+
+
+def build_live_message():
+    msg  = "📺 *Verpasst? Kein Problem\\!*\n"
+    msg += "━━━━━━━━━━━━━━━━━━━━━\n"
+    msg += "Alle Strategien & Live-Sessions\n"
+    msg += "gibt es kostenlos bei mir\\!\n\n"
+    msg += "🎮 *Twitch:* twitch.tv/mentor4trading\n"
+    msg += "📱 *TikTok:* @mentor4trading\n\n"
+    msg += "🎯 SMC/ICT · MNQ & MES Futures\n"
+    msg += "━━━━━━━━━━━━━━━━━━━━━\n"
+    msg += "Reinschauen & von echten\n"
+    msg += "Trades lernen\\!\n"
+    msg += "@mentor4trading\\_signals"
+    return msg
 
 
 def main():
-    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Bot startet...")
+    tz_berlin  = pytz.timezone(TIMEZONE)
+    now        = datetime.now(tz_berlin)
+    weekday    = now.weekday()  # 0=Mo, 6=So
+    hour       = now.hour
 
-    # Config prüfen
-    if BOT_TOKEN == "DEIN_BOT_TOKEN_HIER":
-        print("[ERROR] BOT_TOKEN nicht gesetzt! Bitte in der Config anpassen.")
+    print(f"[{now.strftime('%Y-%m-%d %H:%M')}] Bot startet...")
+
+    if not BOT_TOKEN:
+        print("[ERROR] BOT_TOKEN fehlt!")
         sys.exit(1)
 
-    # Kalender holen
-    xml_data = fetch_calendar()
-    if not xml_data:
-        sys.exit(1)
+    # ── Welcher Post wird heute gepostet? ──
 
-    # Events parsen
-    events = parse_events(xml_data)
-    print(f"[INFO] {len(events)} relevante Events heute gefunden.")
+    # 1. Wirtschaftskalender → Mo–Fr um 07:30 (via Cron aufgerufen)
+    if weekday < 5 and hour == 7:
+        print("[INFO] Posting: Wirtschaftskalender")
+        xml_data = fetch_calendar()
+        if xml_data:
+            events  = parse_events(xml_data)
+            message = build_calendar_message(events)
+            send_to_telegram(message)
 
-    # Nachricht bauen
-    message = build_message(events)
-    print(f"[INFO] Nachricht:\n{message}\n")
+    # 2. Täglicher Homepage Hinweis → täglich um 20:00
+    if hour == 20:
+        print("[INFO] Posting: Homepage Hinweis")
+        send_to_telegram(build_homepage_message())
 
-    # Senden
-    success = send_to_telegram(message)
-    sys.exit(0 if success else 1)
+    # 3. Indikator Post → Montag um 08:00
+    if weekday == 0 and hour == 8:
+        print("[INFO] Posting: Indikator Post")
+        send_to_telegram(build_indicator_message())
+
+    # 4. Twitch/TikTok Hinweis → Sonntag um 18:00
+    if weekday == 6 and hour == 18:
+        print("[INFO] Posting: Live/Social Hinweis")
+        send_to_telegram(build_live_message())
+
+    print("[DONE] Fertig.")
 
 
 if __name__ == "__main__":
