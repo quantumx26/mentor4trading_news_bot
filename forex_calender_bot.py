@@ -167,7 +167,7 @@ def build_homepage_message():
     msg += "🔗 [mentor4trading.netlify.app](https://mentor4trading.netlify.app)\n"
     msg += "━━━━━━━━━━━━━━━━━━━━━\n"
     msg += "@mentor4trading\\_signals"
-    msg += "\n\n🤖 *Jarvis_Bot wünscht euch einen erfolgreichen Tag & perfekte Setups!* 💰"
+    msg += "\n\n🤖 *Jarvis wünscht euch einen schönen Abend* 💰"
     return msg
 
 
@@ -184,7 +184,7 @@ def build_indicator_message():
     msg += "🔗 [Jetzt sichern](https://mentor4trading.netlify.app/indikator.html)\n"
     msg += "━━━━━━━━━━━━━━━━━━━━━\n"
     msg += "Link in Bio · @mentor4trading\\_signals"
-    msg += "\n\n🤖 *Jarvis_Bot wünscht euch einen erfolgreichen Tag & perfekte Setups!* 💰"
+    msg += "\n\n🤖 *Jarvis wünscht euch einen erfolgreichen Tag & perfekte Setups!* 💰"
     return msg
 
 
@@ -200,7 +200,7 @@ def build_live_message():
     msg += "Reinschauen & von echten\n"
     msg += "Trades lernen\\!\n"
     msg += "@mentor4trading\\_signals"
-    msg += "\n\n🤖 *Jarvis_Bot wünscht euch einen erfolgreichen Tag & perfekte Setups!* 💰"
+    msg += "\n\n🤖 *Jarvis wünscht euch eine erfolgreiche Woche & perfekte Setups!* 💰"
     return msg
 
 
