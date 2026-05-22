@@ -155,7 +155,7 @@ def build_calendar_message(events):
         msg += "📊 *Saubere Chartarbeit möglich – viel Erfolg!*\n"
 
     msg += "\n🔗 [mentor4trading.netlify.app](https://mentor4trading.netlify.app)"
-    msg += "\n\n🤖 *Jarvis_Bot wünscht euch einen erfolgreichen Tag & perfekte Setups!* 💰"
+    msg += "\n\n🤖 *Jarvis wünscht euch einen erfolgreichen Tag & perfekte Setups!* 💰"
     return msg
 
 
