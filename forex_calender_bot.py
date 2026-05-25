@@ -211,6 +211,7 @@ def build_community_message():
     msg += "👉 Komm in unsere Community Gruppe!\n\n"
     msg += "🔗 [t.me/mentor4trading\\_community](https://t.me/mentor4trading_community)\n"
     msg += "📌 Dort beantwortet Jarvis deine Fragen\n"
+    msg += "einfach @JarvisCommunityBot anschreiben!\n\n"
     msg += "zu SMC, ICT, MNQ & MES automatisch!\n"
     msg += "━━━━━━━━━━━━━━━━━━━━━\n"
     msg += "🤖 Jarvis | @mentor4trading\\_signals"
