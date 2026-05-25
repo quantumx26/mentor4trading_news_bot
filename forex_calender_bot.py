@@ -148,7 +148,7 @@ def build_calendar_message(events):
 
     high_count = sum(1 for e in events if e["impact"] == "High")
     if high_count >= 3:
-        msg += "⚠️ *Viele News heute – SL absichern, klein traden!*\n"
+        msg += "⚠️ *Viele News heute – ggf. SL absichern, klein traden!*\n"
     elif high_count > 0:
         msg += "⚠️ *News beachten – ggf. vor Release aus Trades raus!*\n"
     else:
@@ -167,12 +167,12 @@ def build_homepage_message():
     msg += "🔗 [mentor4trading.netlify.app](https://mentor4trading.netlify.app)\n"
     msg += "━━━━━━━━━━━━━━━━━━━━━\n"
     msg += "@mentor4trading\\_signals"
-    msg += "\n\n🤖 *Jarvis wünscht euch einen schönen Abend* 💰"
+    msg += "\n\n🤖 *Jarvis & Mentor4Trading wünschen euch einen schönen Abend* 💰"
     return msg
 
 
 def build_indicator_message():
-    msg  = "🎯 *SMC Entry Finder V5*\n"
+    msg  = "🎯 *SMC Entry Finder V6*\n"
     msg += "━━━━━━━━━━━━━━━━━━━━━\n"
     msg += "Der Indikator den ich für alle\n"
     msg += "meine Signale nutze – jetzt\n"
@@ -184,7 +184,6 @@ def build_indicator_message():
     msg += "🔗 [Jetzt sichern](https://mentor4trading.netlify.app/indikator.html)\n"
     msg += "━━━━━━━━━━━━━━━━━━━━━\n"
     msg += "Link in Bio · @mentor4trading\\_signals"
-    msg += "\n\n🤖 *Jarvis wünscht euch einen erfolgreichen Tag & perfekte Setups!* 💰"
     return msg
 
 
@@ -200,7 +199,6 @@ def build_live_message():
     msg += "Reinschauen & von echten\n"
     msg += "Trades lernen\\!\n"
     msg += "@mentor4trading\\_signals"
-    msg += "\n\n🤖 *Jarvis wünscht euch eine erfolgreiche Woche & perfekte Setups!* 💰"
     return msg
 
 
