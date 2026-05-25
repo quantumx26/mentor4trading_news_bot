@@ -4,6 +4,7 @@ Mentor4Trading – ForexFactory Kalender Bot
 + Täglicher Homepage Hinweis (20:00)
 + Wöchentlicher Indikator Post (Montag 08:00)
 + Wöchentlicher Twitch/TikTok Hinweis (Sonntag 18:00)
++ Täglicher Community Hinweis (12:00)
 """
 
 import requests
@@ -202,6 +203,19 @@ def build_live_message():
     return msg
 
 
+def build_community_message():
+    msg  = "💬 *Mentor4Trading Community*\n"
+    msg += "━━━━━━━━━━━━━━━━━━━━━\n"
+    msg += "Du hast Fragen zu den Signalen,\n"
+    msg += "dem Indikator oder der Strategie?\n\n"
+    msg += "👉 Komm in unsere Community Gruppe!\n\n"
+    msg += "📌 Dort beantwortet Jarvis deine Fragen\n"
+    msg += "zu SMC, ICT, MNQ & MES automatisch!\n"
+    msg += "━━━━━━━━━━━━━━━━━━━━━\n"
+    msg += "🤖 Jarvis | @mentor4trading\\_signals"
+    return msg
+
+
 def main():
     tz_berlin  = pytz.timezone(TIMEZONE)
     now        = datetime.now(tz_berlin)
@@ -214,9 +228,7 @@ def main():
         print("[ERROR] BOT_TOKEN fehlt!")
         sys.exit(1)
 
-    # ── Welcher Post wird heute gepostet? ──
-
-    # 1. Wirtschaftskalender → Mo–Fr um 07:30 (via Cron aufgerufen)
+    # 1. Wirtschaftskalender → Mo–Fr um 07:00
     if weekday < 5 and hour == 7:
         print("[INFO] Posting: Wirtschaftskalender")
         xml_data = fetch_calendar()
@@ -225,17 +237,22 @@ def main():
             message = build_calendar_message(events)
             send_to_telegram(message)
 
-    # 2. Täglicher Homepage Hinweis → täglich um 20:00
+    # 2. Community Hinweis → täglich um 12:00
+    if hour == 12:
+        print("[INFO] Posting: Community Hinweis")
+        send_to_telegram(build_community_message())
+
+    # 3. Täglicher Homepage Hinweis → täglich um 20:00
     if hour == 20:
         print("[INFO] Posting: Homepage Hinweis")
         send_to_telegram(build_homepage_message())
 
-    # 3. Indikator Post → Montag um 08:00
+    # 4. Indikator Post → Montag um 08:00
     if weekday == 0 and hour == 8:
         print("[INFO] Posting: Indikator Post")
         send_to_telegram(build_indicator_message())
 
-    # 4. Twitch/TikTok Hinweis → Sonntag um 18:00
+    # 5. Twitch/TikTok Hinweis → Sonntag um 18:00
     if weekday == 6 and hour == 18:
         print("[INFO] Posting: Live/Social Hinweis")
         send_to_telegram(build_live_message())
