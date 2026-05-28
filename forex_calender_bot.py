@@ -20,7 +20,7 @@ load_dotenv()
 # ─────────────────────────────────────────────
 BOT_TOKEN   = os.environ.get("BOT_TOKEN", "")
 CHANNEL_ID  = os.environ.get("CHANNEL_ID", "")
-CURRENCIES  = ["USD", "EUR", "GBP", "JPY"]
+CURRENCIES  = ["USD", "EUR"]
 SHOW_HIGH   = True
 SHOW_MEDIUM = True
 SHOW_LOW    = False
@@ -36,9 +36,7 @@ IMPACT_EMOJI = {
 }
 
 FLAG_EMOJI = {
-    "USD": "🇺🇸", "EUR": "🇪🇺", "GBP": "🇬🇧",
-    "JPY": "🇯🇵", "CHF": "🇨🇭", "AUD": "🇦🇺",
-    "CAD": "🇨🇦", "NZD": "🇳🇿",
+    "USD": "🇺🇸", "EUR": "🇪🇺"
 }
 
 
