@@ -20,7 +20,7 @@ load_dotenv()
 # ─────────────────────────────────────────────
 BOT_TOKEN   = os.environ.get("BOT_TOKEN", "")
 CHANNEL_ID  = os.environ.get("CHANNEL_ID", "")
-CURRENCIES  = ["USD", "EUR"]
+CURRENCIES  = ["USD"]
 SHOW_HIGH   = True
 SHOW_MEDIUM = True
 SHOW_LOW    = False
