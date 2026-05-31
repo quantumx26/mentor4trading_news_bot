@@ -302,7 +302,7 @@ def main():
             message = build_calendar_message(events)
             send_to_telegram(message)
 
-    # 2. Trading Mindset → Montag um 09:00
+    # 2. Trading Mindset → Montag um 18:00
     if weekday == 0 and hour == :18
         print("[INFO] Posting: Trading Mindset")
         send_to_telegram(build_mindset_message())
@@ -312,8 +312,8 @@ def main():
         print("[INFO] Posting: Community Hinweis")
         send_to_telegram(build_community_message())
 
-    # 4. Täglicher Homepage Hinweis → täglich um 20:00
-    if hour == 20:
+    # 4. Dienstag und donnerstag um 20:00
+    if weekday in (1, 3) and hour == 21:
         print("[INFO] Posting: Homepage Hinweis")
         send_to_telegram(build_homepage_message())
 
