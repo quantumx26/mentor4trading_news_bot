@@ -314,7 +314,7 @@ def main():
         send_to_telegram(build_community_message())
 
     # 4. Dienstag und donnerstag um 20:00
-    if weekday in (1, 3) and hour == 21:
+    if weekday in (1, 3) and hour == 20:
         print("[INFO] Posting: Homepage Hinweis")
         send_to_telegram(build_homepage_message())
 
