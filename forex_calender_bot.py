@@ -236,13 +236,14 @@ def build_homepage_message():
 
 
 def build_indicator_message():
-    msg  = "🎯 *SMC Entry Finder V6*\n"
+    msg  = "🎯 *SMC Entry Finder V8*\n"
     msg += "━━━━━━━━━━━━━━━━━━━━━\n"
     msg += "Der Indikator den ich für alle\n"
     msg += "meine Signale nutze\n"
-    msg += "✅ Live Dashboard · Session & Bias\n"
+    msg += "✅ Live Dashboard Erweiterung · Session & Bias\n"
     msg += "✅ Entry Zone Visualisierung\n"
     msg += "✅ Signal Filter mit Alerts\n\n"
+    msg += "✅ V1/V2 Modus - Integrierte Scalping Sessions und vieles mehr... \n\n"
     msg += "⚠️ *Ab Juni nur noch paid*\n"
     msg += "⚠️ Der neue Indikator ist ab 01.Juni verfügbar!\n"
     msg += "🔗 [Jetzt sichern](https://mentor4trading.netlify.app/indikator.html)\n"
@@ -318,7 +319,7 @@ def main():
         send_to_telegram(build_homepage_message())
 
     # Indikator Post → Sonntag und Mittwoch um 21:00
-    if weekday in (2, 6) and hour == 21:
+    if hour == 21:
         print("[INFO] Posting: Indikator Post")
         send_to_telegram(build_indicator_message())
 
