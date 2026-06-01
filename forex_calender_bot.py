@@ -303,7 +303,7 @@ def main():
             send_to_telegram(message)
 
     # 2. Trading Mindset → Montag um 18:00
-    if weekday == 0 and hour == :18
+    if weekday == 0 and hour == 18:
         print("[INFO] Posting: Trading Mindset")
         send_to_telegram(build_mindset_message())
 
