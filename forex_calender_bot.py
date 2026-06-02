@@ -245,7 +245,7 @@ def build_indicator_message():
     msg += "✅ Signal Filter mit Alerts\n\n"
     msg += "✅ V1/V2 Modus - Integrierte Scalping Sessions und vieles mehr... \n\n"
     msg += "⚠️ *Ab Juni nur noch paid*\n"
-    msg += "⚠️ Der neue Indikator ist ab 01.Juni verfügbar!\n"
+    msg += "⚠️ Der neue Indikator ist JETZT verfügbar!\n"
     msg += "🔗 [Jetzt sichern](https://mentor4trading.netlify.app/indikator.html)\n"
     msg += "━━━━━━━━━━━━━━━━━━━━━\n"
     msg += "Link in Bio · @mentor4trading\\_signals"
