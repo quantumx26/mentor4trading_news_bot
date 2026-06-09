@@ -268,15 +268,16 @@ def build_live_message():
 
 
 def build_community_message():
-    msg  = "💬 *Mentor4Trading Community*\n"
+    msg  = "📊 *Mentor4Trading Marktanalyse*\n"
     msg += "━━━━━━━━━━━━━━━━━━━━━\n"
-    msg += "Du hast Fragen zu den Signalen,\n"
-    msg += "dem Indikator oder der Strategie?\n\n"
-    msg += "👉 Komm in unsere Community Gruppe!\n\n"
-    msg += "🔗 [t.me/mentor4trading\\_community](https://t.me/mentor4trading_community)\n\n"
-    msg += "📌 Dort beantwortet Jarvis deine Fragen\n"
-    msg += "zu SMC, MNQ & MES automatisch!\n\n"
-    msg += "Einfach @JarvisCommunityBot anschreiben!\n\n"
+    msg += "Willst du verstehen *warum* sich der Markt\n"
+    msg += "bewegt – nicht nur *wann*?\n\n"
+    msg += "📌 In meinem Marktanalyse Kanal erkläre ich:\n"
+    msg += "• Warum ich in einen Trade gehe\n"
+    msg += "• Warum ich einen Trade ablehne\n"
+    msg += "• Marktstruktur & Trading-Konzepte\n\n"
+    msg += "👉 Jetzt beitreten!\n"
+    msg += "🔗 [t.me/mentor4trading\\_community](https://t.me/mentor4trading_community)\n"
     msg += "━━━━━━━━━━━━━━━━━━━━━\n"
     msg += "🤖 Jarvis | @mentor4trading\\_signals"
     return msg
@@ -308,17 +309,17 @@ def main():
         print("[INFO] Posting: Trading Mindset")
         send_to_telegram(build_mindset_message())
 
-    # 3. Community Hinweis → täglich um 19:00
+    # 3. Marktanalyse Hinweis → täglich um 19:00
     if hour == 19:
-        print("[INFO] Posting: Community Hinweis")
+        print("[INFO] Posting: Marktanalyse Hinweis")
         send_to_telegram(build_community_message())
 
-    # 4. Sonntag 19 Uhr
+    # 4. Homepage → Sonntag 19 Uhr
     if weekday == 6 and hour == 19:
         print("[INFO] Posting: Homepage Hinweis")
         send_to_telegram(build_homepage_message())
 
-    # Indikator Post → Freitag um 20:00
+    # 5. Indikator Post → Freitag um 20:00
     if weekday == 4 and hour == 20:
         print("[INFO] Posting: Indikator Post")
         send_to_telegram(build_indicator_message())
