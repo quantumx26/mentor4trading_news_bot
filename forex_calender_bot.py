@@ -313,13 +313,13 @@ def main():
         print("[INFO] Posting: Community Hinweis")
         send_to_telegram(build_community_message())
 
-    # 4. Dienstag und donnerstag um 20:00
-    if weekday in (1, 3) and hour == 20:
+    # 4. Sonntag 19 Uhr
+    if weekday == 6 and hour == 19:
         print("[INFO] Posting: Homepage Hinweis")
         send_to_telegram(build_homepage_message())
 
-    # Indikator Post → Sonntag und Mittwoch um 21:00
-    if hour == 21:
+    # Indikator Post → Freitag um 20:00
+    if weekday == 4 and hour == 20:
         print("[INFO] Posting: Indikator Post")
         send_to_telegram(build_indicator_message())
 
