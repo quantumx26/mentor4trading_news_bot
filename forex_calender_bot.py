@@ -223,50 +223,6 @@ def build_mindset_message():
     return msg
 
 
-def build_homepage_message():
-    msg  = "🌐 *Mehr von Mentor4Trading*\n"
-    msg += "━━━━━━━━━━━━━━━━━━━━━\n"
-    msg += "📊 Gratis Ressourcen & Guides\n"
-    msg += "📈 ORB Ebook · SMC Basics · Setups\n"
-    msg += "🔗 [mentor4trading.netlify.app](https://mentor4trading.netlify.app)\n"
-    msg += "━━━━━━━━━━━━━━━━━━━━━\n"
-    msg += "@mentor4trading\\_signals"
-    msg += "\n\n🤖 *Jarvis & Mentor4Trading wünschen euch einen schönen Abend* 💰"
-    return msg
-
-
-def build_indicator_message():
-    msg  = "🎯 *SMC Entry Finder V8*\n"
-    msg += "━━━━━━━━━━━━━━━━━━━━━\n"
-    msg += "Der Indikator den ich für alle\n"
-    msg += "meine Signale nutze\n"
-    msg += "✅ Live Dashboard Erweiterung · Session & Bias\n"
-    msg += "✅ Entry Zone Visualisierung\n"
-    msg += "✅ Signal Filter mit Alerts\n\n"
-    msg += "✅ V1/V2 Modus - Integrierte Scalping Sessions und vieles mehr... \n\n"
-    msg += "⚠️ *Ab Juni nur noch paid*\n"
-    msg += "⚠️ Der neue Indikator ist JETZT verfügbar!\n"
-    msg += "🔗 [Jetzt sichern](https://mentor4trading.netlify.app/indikator.html)\n"
-    msg += "━━━━━━━━━━━━━━━━━━━━━\n"
-    msg += "Link in Bio · @mentor4trading\\_signals"
-    return msg
-
-
-def build_live_message():
-    msg  = "📺 *Verpasst? Kein Problem\\!*\n"
-    msg += "━━━━━━━━━━━━━━━━━━━━━\n"
-    msg += "Alle Strategien & Live-Sessions\n"
-    msg += "gibt es kostenlos bei mir!\n\n"
-    msg += "🎮 *Twitch:* twitch.tv/mentor4trading\n"
-    msg += "📱 *TikTok:* @mentor4trading\n\n"
-    msg += "🎯 SMC · MNQ & MES Futures\n"
-    msg += "━━━━━━━━━━━━━━━━━━━━━\n"
-    msg += "Reinschauen & von echten\n"
-    msg += "Trades lernen!\n"
-    msg += "@mentor4trading\\_signals"
-    return msg
-
-
 def build_community_message():
     msg  = "📊 *Mentor4Trading Marktanalyse*\n"
     msg += "━━━━━━━━━━━━━━━━━━━━━\n"
@@ -313,21 +269,6 @@ def main():
     if hour == 19:
         print("[INFO] Posting: Marktanalyse Hinweis")
         send_to_telegram(build_community_message())
-
-    # 4. Homepage → Sonntag 19 Uhr
-    if weekday == 6 and hour == 19:
-        print("[INFO] Posting: Homepage Hinweis")
-        send_to_telegram(build_homepage_message())
-
-    # 5. Indikator Post → Freitag um 20:00
-    if weekday == 4 and hour == 20:
-        print("[INFO] Posting: Indikator Post")
-        send_to_telegram(build_indicator_message())
-
-    # 6. Twitch/TikTok Hinweis → Sonntag um 18:00
-    if weekday == 6 and hour == 18:
-        print("[INFO] Posting: Live/Social Hinweis")
-        send_to_telegram(build_live_message())
 
     print("[DONE] Fertig.")
 
