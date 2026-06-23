@@ -266,7 +266,7 @@ def main():
         send_to_telegram(build_mindset_message())
 
     # 3. Marktanalyse Hinweis → täglich um 19:00
-    if hour == 20:
+    if weekday == 1 and hour == 20:
         print("[INFO] Posting: Marktanalyse Hinweis")
         send_to_telegram(build_community_message())
 
